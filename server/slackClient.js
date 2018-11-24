@@ -66,6 +66,10 @@ class SlackClient {
     this._rtm.start()
 
   }
+
+  stop() {
+    this._rtm.disconnect()
+  }
 }
 
 module.exports = SlackClient
