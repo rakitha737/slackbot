@@ -7,7 +7,14 @@
     "test": "nyc mocha --recursive test",
     "start": "node bin/run"
   },
-  "author": "",
+"engines": {
+  "node":"8.11.3"
+},
+"repository": {
+  "type":"git",
+  "url":"https://github.com/rakitha737/slackbot.git"
+},
+  "author": "Rakiz",
   "license": "ISC",
   "dependencies": {
     "@slack/client": "^4.8.0",

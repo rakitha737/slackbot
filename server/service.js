@@ -7,10 +7,10 @@ const ServiceRegistry = require('./serviceRegistry')
 
 
 module.exports = (config) => {
-    const serviceRegistry = new ServiceRegistry(config.serviceTimeout, config.log())
+  const serviceRegistry = new ServiceRegistry(config.serviceTimeout, config.log())
   service.set('serviceRegistry', serviceRegistry)
 
-  service.put('/service/:intent/:port', (req, res, next) => {
+  service.put('/service/:intent/:port', (req, res) => {
     const serviceIntent = req.params.intent
     const servicePort = req.params.port
 
@@ -19,6 +19,6 @@ module.exports = (config) => {
       : req.connection.remoteAddress
     serviceRegistry.add(serviceIntent, serviceIp, servicePort)
     res.json({ result: `${serviceIntent} at ${serviceIp}: ${servicePort}` })
-    })
-    return service
+  })
+  return service
 }

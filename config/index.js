@@ -19,6 +19,9 @@ module.exports = {
   slackToken: process.env.SLACK_TOKEN,
   slackLogLevel: 'info',
   serviceTimeout: 30,
+
+  // use npm package bunyan to generate custom logger
+  // npm start | ./node_modules/.bin/bunyan to color coded messages
   log: (env) => {
     if (env) return log[env]()
     return log[process.env.NODE_ENV || 'development']()
