@@ -1,9 +1,9 @@
 'use strict'
 
 const request = require('superagent')
-function handleWitResponse(res) {
-  console.log(res)
-}
+// function handleWitResponse(res) {
+//   console.log(res)
+// }
 
 class WitClient {
   constructor(token) {
@@ -21,7 +21,7 @@ class WitClient {
         if (res.statusCode != 200)
           return cb('Expected status 200 but got ' + res.statusCode)
 
-        const witResponse = handleWitResponse(res.body)
+        // handleWitResponse(res.body)
         return cb(null, res.body)
       })
   }
