@@ -1,13 +1,13 @@
 'use strict'
-
-const should = require('should')
+//  "test": "set NODE_ENV=test eslint bin server && nyc mocha --recursive test",
+require('should')
 const request = require('supertest')
 const config = require('../../config')
-const service = require('../../server/service')
+const service = require('../../server/service')(config)
 
 describe('The express service', () => {
   describe('PUT/ foo', () => {
-    it('should return HTTP 404', done => {
+    it('should return HTTP 404', (done) => {
       request(service)
         .put('/foo')
         .expect(404, done)
@@ -16,7 +16,7 @@ describe('The express service', () => {
 })
 
 describe('PUT /service/:intent/:port', () => {
-  it('should return HTTP 200 with valid result', done => {
+  it('should return HTTP 200 with valid result', (done) => {
     request(service)
       .put('/service/test/9999')
       .expect(200)

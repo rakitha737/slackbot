@@ -2,68 +2,74 @@
 
 const { RTMClient } = require('@slack/client')
 
-let rtm = null
-let nlp = null
-let registry = null
-function handleOnAuthenticated(rtmStartData) {
-  console.log(
-    `Logged in as ${rtmStartData.self.name} of team ${
-      rtmStartData.team.name
-    }, but not connected`
-  )
-}
+class SlackClient {
+  constructor(token, logLevel, nlp, registry, log) {
+    this._rtm = new RTMClient(token, { logLevel: logLevel })
+    this._nlp = nlp
+    this._registry = registry
+    this._log= log
+    this._addAuthenticatedHandler(this._handleAuthenticated)
+    this._rtm.on('message', this._handleOnMessage.bind(this))
+  }
 
-function addAuthenticatedHandler(rtm, handler) {
-  rtm.on('authenticated', handler)
-}
+  _handleAuthenticated(rtmStartData) {
+    this._log.info(
+      `Logged in as ${rtmStartData.self.name} of team ${
+        rtmStartData.team.name
+      }, but not connected`
+    )
+  }
 
-function handleOnMessage(rtmMessage) {
-  if (rtmMessage.text.toLowerCase().includes('raki')) {
-    nlp.ask(rtmMessage.text, (err, res) => {
-      if (err) {
-        console.log(err)
-        return
-      }
+  _addAuthenticatedHandler(handler) {
+    this._rtm.on('authenticated', handler.bind(this))
+  }
 
-      try {
-        if (
-          !res.entities.intent ||
-          !res.entities.intent[0] ||
-          !res.entities.intent[0].value
-        ) {
-          throw new Error('Could not extract intent')
+  _handleOnMessage(rtmMessage) {
+    if (rtmMessage.text.toLowerCase().includes('raki')) {
+      this._nlp.ask(rtmMessage.text, (err, res) => {
+        if (err) {
+          this._log.error(err)
+          return
         }
 
-        const intent = require('./intents/' + res.entities.intent[0].value + 'Intent')
-
-        intent.process(res, registry, function(error, response) {
-          if (error) {
-            console.log(error.message)
-            return
+        try {
+          if (
+            !res.entities.intent ||
+            !res.entities.intent[0] ||
+            !res.entities.intent[0].value
+          ) {
+            throw new Error('Could not extract intent')
           }
-          return rtm.sendMessage(response, rtmMessage.channel)
-        })
-      } catch (err) {
-        console.log(err)
-        console.log(res)
-        rtm.sendMessage(
-          "Sorry I don't know what you are taking about",
-          rtmMessage.channel
-        )
-      }
-    })
+
+          const intent = require('./intents/' + res.entities.intent[0].value + 'Intent')
+
+          intent.process(res, this._registry, this._log, (error, response) => {
+            if (error) {
+              this._log.error(error.message)
+              return
+            }
+            return this._rtm.sendMessage(response, rtmMessage.channel)
+          })
+        } catch (err) {
+          this._log.error(err)
+          this._log.info(res)
+          this._rtm.sendMessage(
+            'Sorry I don\'t know what you are taking about',
+            rtmMessage.channel
+          )
+        }
+      })
+    }
+  }
+  start(handler) {
+    this._addAuthenticatedHandler(handler)
+    this._rtm.start()
+
+  }
+
+  stop() {
+    this._rtm.disconnect()
   }
 }
 
-module.exports.init = function slackClient(token, logLevel, nlpClient, serviceRegistry) {
-  nlp = nlpClient
-  registry = serviceRegistry
-  rtm = new RTMClient(token, {
-    logLevel: logLevel,
-  })
-  addAuthenticatedHandler(rtm, handleOnAuthenticated)
-  rtm.on('message', handleOnMessage)
-  return rtm
-}
-
-module.exports.addAuthenticatedHandler = addAuthenticatedHandler
+module.exports = SlackClient
