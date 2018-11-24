@@ -1,25 +1,20 @@
 'use strict'
 
 const config = require('../config/index')
-const slackClient = require('../server/slackClient')
-const service = require('../server/service')
+const SlackClient = require('../server/slackClient')
+const service = require('../server/service')(config)
 const http = require('http')
 const server = http.createServer(service)
 
 const witToken = config.witToken
 const WitClient = require('../server/witClient')
 const witClient = new WitClient(witToken)
-const slackToken = config.slackToken
-
-const slackLogLevel = 'info'
 
 const serviceRegistry = service.get('serviceRegistry')
-const rtm = slackClient.init(slackToken, slackLogLevel, witClient, serviceRegistry)
-rtm.start()
-
-slackClient.addAuthenticatedHandler(rtm, () => server.listen(3000))
-
-server.listen(3000)
+const slackClient = new SlackClient(config.slackToken, config.slackLogLevel, witClient, serviceRegistry)
+slackClient.start(() => {
+  server.listen(3000)
+})
 
 server.on('listening', function() {
   console.log(
