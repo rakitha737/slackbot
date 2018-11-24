@@ -15,12 +15,15 @@ module.exports.process = function process(intentData, registry, log, cb) {
   const service = registry.get('time')
   if (!service) return cb(false, 'No servive available')
 
-  request.get(`http://${service.ip}:${service.port}/service/${location}`, (err, res) => {
-    if (err || res.statusCode != 200 || !res.body.result) {
-      log.error(err)
-      return cb(false, `I had problem finding out the time in ${location}`)
-    }
+  request
+    .get(`http://${service.ip}:${service.port}/service/${location}`)
+    .set('X-SLACK-SERVICE-API-TOKEN', service.accessToken)
+    .end((err, res) => {
+      if (err || res.statusCode != 200 || !res.body.result) {
+        log.error(err)
+        return cb(false, `I had problem finding out the time in ${location}`)
+      }
 
-    return cb(false, `In ${location}, It is now: ${res.body.result}`)
-  })
+      return cb(false, `In ${location}, It is now: ${res.body.result}`)
+    })
 }

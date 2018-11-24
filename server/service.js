@@ -11,13 +11,20 @@ module.exports = (config) => {
   service.set('serviceRegistry', serviceRegistry)
 
   service.put('/service/:intent/:port', (req, res) => {
+
+    if (req.get('X-SLACK-BOT-API-TOKEN') !== config.slackBotApiToken) {
+      return res.sendStatus(403)
+    }
+    if (!req.get('X-SLACK-SERVICE-API-TOKEN')) {
+      return res.sendStatus(400)
+    }
     const serviceIntent = req.params.intent
     const servicePort = req.params.port
 
     const serviceIp = req.connection.remoteAddress.includes('::')
       ? `[${req.connection.remoteAddress}]`
       : req.connection.remoteAddress
-    serviceRegistry.add(serviceIntent, serviceIp, servicePort)
+    serviceRegistry.add(serviceIntent, serviceIp, servicePort, req.get('X-SLACK-SERVICE-API-TOKEN'))
     res.json({ result: `${serviceIntent} at ${serviceIp}: ${servicePort}` })
   })
   return service

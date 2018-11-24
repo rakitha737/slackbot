@@ -19,7 +19,7 @@ module.exports = {
   slackToken: process.env.SLACK_TOKEN,
   slackLogLevel: 'info',
   serviceTimeout: 30,
-
+  slackBotApiToken: process.env.SLACK_BOT_API_TOKEN,
   // use npm package bunyan to generate custom logger
   // npm start | ./node_modules/.bin/bunyan to color coded messages
   log: (env) => {
