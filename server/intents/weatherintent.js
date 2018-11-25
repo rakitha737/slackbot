@@ -24,6 +24,6 @@ module.exports.process = function process(intentData, registry, log, cb) {
         return cb(false, `I had problem finding out the weather in ${location}`)
       }
 
-      return cb(false, `The current weather in ${location} is ${res.body.result}`)
+      return cb(false, `Hey, The current weather in ${location} is ${res.body.result}`)
     })
 }

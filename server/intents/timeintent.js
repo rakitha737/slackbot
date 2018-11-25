@@ -24,6 +24,6 @@ module.exports.process = function process(intentData, registry, log, cb) {
         return cb(false, `I had problem finding out the time in ${location}`)
       }
 
-      return cb(false, `In ${location}, It is now: ${res.body.result}`)
+      return cb(false, `Hey, In ${location}, It is now: ${res.body.result}`)
     })
 }
