@@ -41,7 +41,7 @@ class SlackClient {
             throw new Error('Could not extract intent')
           }
 
-          const intent = require('./intents/' + res.entities.intent[0].value + 'Intent')
+          const intent = require('./intents/' + res.entities.intent[0].value + 'intent')
 
           intent.process(res, this._registry, this._log, (error, response) => {
             if (error) {

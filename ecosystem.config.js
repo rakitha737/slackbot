@@ -13,7 +13,7 @@ module.exports = {
       user: 'node',
       host: '18.224.1.150',
       ref: 'origin/master',
-      repo: 'https://github.com/rakitha737/slackbot.git',
+      repo: 'git@github.com:rakitha737/slackbot.git',
       path: '/srv/production',
       'post-deploy':
         'cp ../.env ./ && npm install && pm2 startOrRestart ecosystem.config.js --env production',
