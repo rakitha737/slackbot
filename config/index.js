@@ -7,7 +7,7 @@ const log = {
     return bunyan.createLogger({name: 'Slackbot-development', level:'debug'})
   },
   production: () => {
-    return bunyan.createLogger({ name: 'Slackbot-production', level: 'debug' })
+    return bunyan.createLogger({ name: 'Slackbot-production', level: 'info' })
   },
   test: () => {
     return bunyan.createLogger({ name: 'Slackbot-test', level: 'fatal' })
