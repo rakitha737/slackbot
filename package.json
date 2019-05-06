@@ -5,15 +5,17 @@
   "main": "server/service.js",
   "scripts": {
     "test": "snyk test && nyc mocha --recursive test",
-    "start": "node bin/run"
+    "start": "node bin/run",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
-"engines": {
-  "node":"8.11.3"
-},
-"repository": {
-  "type":"git",
-  "url":"https://github.com/rakitha737/slackbot.git"
-},
+  "engines": {
+    "node": "8.11.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rakitha737/slackbot.git"
+  },
   "author": "Rakiz",
   "license": "ISC",
   "dependencies": {
@@ -21,12 +23,14 @@
     "bunyan": "^1.8.12",
     "dotenv": "^6.1.0",
     "express": "^4.16.4",
-    "superagent": "^4.0.0"
+    "superagent": "^4.0.0",
+    "snyk": "^1.161.1"
   },
   "devDependencies": {
     "mocha": "^5.2.0",
     "nyc": "^13.1.0",
     "should": "^13.2.3",
     "supertest": "^3.3.0"
-  }
+  },
+  "snyk": true
 }
