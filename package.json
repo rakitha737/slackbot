@@ -17,11 +17,11 @@
   "author": "Rakiz",
   "license": "ISC",
   "dependencies": {
-    "@slack/client": "^4.8.0",
+    "@slack/client": "^5.0.2",
     "bunyan": "^1.8.12",
     "dotenv": "^6.1.0",
     "express": "^4.16.4",
-    "superagent": "^4.0.0"
+    "superagent": "^10.2.2"
   },
   "devDependencies": {
     "mocha": "^5.2.0",
